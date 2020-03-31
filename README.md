@@ -1,3 +1,9 @@
+## Run local docker
+
+**npm run start-docker** - start docker services.
+
+**npm run stop-docker** - stop docker services.
+
 ## Add database migration
 
 **npm run add-migration** migration-xxxxx-xxxx
