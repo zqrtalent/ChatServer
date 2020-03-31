@@ -1,0 +1,4 @@
+MSG_SERVICE_URL=amqp://localhost
+MSG_QUEUES=worker.messaging.queue
+CACHE_HOST=0.0.0.0
+CACHE_PORT=6379

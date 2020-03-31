@@ -1,0 +1,9 @@
+MSG_SERVICE_URL=amqp://localhost
+MSG_QUEUES=web.messaging.queue
+
+CACHE_HOST=0.0.0.0
+CACHE_PORT=6379
+
+JWT_SECRETKEY=secretkey1
+JWT_ISSUER=chatapp.auth.server
+JWT_AUDIENCE=chatusers
