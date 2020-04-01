@@ -1,1 +1,0 @@
-module.exports.messagefactory = require('./message.factory')
