@@ -49,7 +49,7 @@ const sendMessage = (queue, message) => {
     */
 const init = (opts) => {
     return new Promise((resolve, reject) => {
-        const amqpUrl = opts.amqpUrl || 'amqp://localhost:5672'
+        const amqpUrl = opts.amqpUrl
         amqp.connect(amqpUrl, (err, conn) => {
             if(err != null){
                 logger.error(err)

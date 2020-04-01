@@ -3,7 +3,7 @@ const { Sequelize, Model, DataTypes } = require('sequelize')
 const init = (sequelize) => {
     return sequelize.define('Users', 
     {
-        id: { type: DataTypes.UUIDV1(64), primaryKey: true },
+        id: { type: DataTypes.UUIDV1(), primaryKey: true },
         firstName: { type: DataTypes.STRING(64), allowNull: false },
         lastName: { type: DataTypes.STRING(128), allowNull: false },
         email: { type: DataTypes.STRING(64), allowNull: false, validate: { isEmail: true } },

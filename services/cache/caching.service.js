@@ -3,8 +3,8 @@ const { promisify } = require('util')
 
 const init = (opts) => {
     let client = redis.createClient({
-        host: opts.host || '0.0.0.0',
-        port: opts.port || 6379
+        host: opts.host,
+        port: opts.port
     })
     
     const getAsync = promisify(client.get).bind(client)
