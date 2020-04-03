@@ -1,0 +1,6 @@
+module.exports.cacheservice = require('./cache/caching.service')
+module.exports.messagingcacheservice = require('./messaging/messaging.cache.service')
+module.exports.messagingservice = require('./messaging/messaging.service')
+module.exports.poolingservice = require('./messaging/pooling.service.js')
+module.exports.passportjwt = require('./auth/passportjwt.service')
+module.exports.usersservice = require('./auth/users.service')
