@@ -16,7 +16,7 @@ const setupQueues = (opts, channel) => {
 }
 
 /**
- * Sends message to a prticular message queue.
+ * Sends message to a particular message queue.
  * @param {String} queue Queue name message send to.
  * @param {Object} message Message object contaning 'type' property referring to the type name of the message.
  */

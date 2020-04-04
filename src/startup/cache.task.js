@@ -1,5 +1,5 @@
 const { cacheservice } = require('../services')
-const { cachingconfig } = require('../../config')
+const { cachingconfig } = require('../config')
 
 const execute = (emitter, logger) => {
     /* Initialize cache client. */

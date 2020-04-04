@@ -4,7 +4,7 @@ const { Sequelize } = require('sequelize')
 module.exports = {
   up: async (queryInterface) => {
    return queryInterface.createTable('tb_users', {
-      id: { type: Sequelize.UUIDV1(), defaultValue: Sequelize.UUID, primaryKey: true},
+      id: { type: Sequelize.UUID(), defaultValue: Sequelize.UUID, primaryKey: true},
       firstName: { type: Sequelize.STRING(64), allowNull: false }, 
       lastName: { type: Sequelize.STRING(128), allowNull: false },
       email: { type: Sequelize.STRING(64), allowNull: false, validate: { isEmail: true } },

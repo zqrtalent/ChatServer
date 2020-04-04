@@ -13,15 +13,10 @@ const init = (express, passport, usersService) => {
             return
         }
 
-        const result = await usersService.verifyAndGenerateToken(email, password)
-        if(!result){
-            res.status(404).send()
-            return
-        }
-
+        const tokenResult = await usersService.verifyAndGenerateToken(email, password)
         res.status(200).send({
-            success: true,
-            token: result || ''
+            success: tokenResult ? true : false,
+            token: tokenResult || ''
         })
     })
     
@@ -42,6 +37,7 @@ const init = (express, passport, usersService) => {
             }
         })
     })
+
     return router
 }
 

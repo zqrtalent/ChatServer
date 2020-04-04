@@ -1,10 +1,10 @@
 const { Sequelize, Model, DataTypes } = require('sequelize')
 
 const init = (sequelize) => {
-    return sequelize.define('Groups', 
+    const entityType = sequelize.define('Groups', 
     {
         id: { type: DataTypes.UUIDV1(), primaryKey: true },
-        userId: { type: DataTypes.UUIDV1(64), allowNull: false },
+        userId: { type: DataTypes.UUIDV1(), allowNull: false },
         name: { type: DataTypes.STRING(100), allowNull: false },
         createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: Date.UTC },
         updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: Date.UTC },
@@ -21,7 +21,21 @@ const init = (sequelize) => {
         // define the table's name
         tableName: 'tb_groups',
         modelName: 'Groups',
+        // define indexes
+        indexes: [
+            {
+                unique: false,
+                fields: ['userId']
+            }
+        ],
     })
+
+    entityType['associate'] = (models) => {
+        entityType.Users =  entityType.belongsTo(models.Users, { foreignKey: 'userId' });
+        entityType.Members = entityType.hasMany(models.Members, { foreignKey: 'groupId' });
+    }
+
+    return entityType
 }
 
 module.exports = init

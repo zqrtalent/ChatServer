@@ -29,11 +29,9 @@ const init = (opts) => {
     // TODO: add model file name and callback here.
     // -------------------------------------------
     { modelFile: 'users', callback: m => { database['User'] = m }},
-    // { modelFile: 'UserRoles', callback: m => { database.userRoles = m }},
-    // { modelFile: 'Conversations', callback: m => { database.conversations = m }},
-    // { modelFile: 'Participants', callback: m => { database.participants = m }},
-    // { modelFile: 'ConversationParticipants', callback: m => { database.conversationParticipants = m }},
-    // { modelFile: 'Messages', callback: m => { database.messages = m }}
+    { modelFile: 'groups', callback: m => { database['Group'] = m }},
+    { modelFile: 'members', callback: m => { database['Member'] = m }},
+    { modelFile: 'messages', callback: m => { database['Message'] = m }},
   ]
   // Define entity models. [END]
 

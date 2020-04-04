@@ -25,7 +25,7 @@ const init = (opts, userService) => {
 
         const user = await userService.getUserByEmail(payload.sub)
         if(user){
-            return done(null, {userId: payload.sub})
+            return done(null, {userId: user.id, user: payload.sub})
         }
         return done(null, false)
     })

@@ -10,14 +10,15 @@ const cors = require('cors')
 const { 
     healthroutes, 
     usersroutes, 
-    messagingroutes, 
+    grouproutes, 
     poolingroutes 
 } = require('./routes')
 
 const { 
     passportjwt, 
     poolingservice,
-    usersservice
+    usersservice,
+    groupservice
 } = require('./services')
 const logger  = require('./common/logger')
 
@@ -33,6 +34,7 @@ const emitter = new EventEmitter()
 const startup = async () => {
     const services = {
         usersService: null,
+        groupService: null,
         cacheClient: null,
         queueService: null
     }
@@ -73,7 +75,10 @@ const startup = async () => {
 
     emitter.on('start', () => {
         const usersService = usersservice()
+        const groupService = groupservice()
         const passport = passportjwt({}, usersService)
+
+        services.groupService = groupService
         services.usersService = usersService
 
         app.use(cors())
@@ -83,7 +88,7 @@ const startup = async () => {
 
         app.use('/hc', healthroutes(express, services.queueService, services.cacheClient))
         app.use('/user', usersroutes(express, passport, usersService))
-        app.use('/api/group', messagingroutes(express, passport, services.queueService, poolingservice(services.cacheClient)))
+        app.use('/group', grouproutes(express, passport, services.queueService, groupService))
         app.use('/pooling', poolingroutes(express, passport, poolingservice(services.cacheClient)))
 
         app.use((err, req, res, next) => {

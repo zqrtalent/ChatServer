@@ -1,7 +1,7 @@
 const { Sequelize, Model, DataTypes } = require('sequelize')
 
 const init = (sequelize) => {
-    return sequelize.define('Members', 
+    const entityType =  sequelize.define('Members', 
     {
         id: { type: DataTypes.UUIDV1(), primaryKey: true },
         groupId: { type: DataTypes.UUIDV1(), allowNull: false },
@@ -31,6 +31,12 @@ const init = (sequelize) => {
             }
         ],
     })
+
+    entityType['associate'] = (models) => {
+        entityType.Groups = entityType.belongsTo(models.Groups, { foreignKey: 'groupId' });
+    }
+
+    return entityType
 }
 
 module.exports = init

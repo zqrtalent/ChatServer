@@ -1,11 +1,11 @@
 const { Sequelize, Model, DataTypes } = require('sequelize')
 
 const init = (sequelize) => {
-    const entityType = sequelize.define('MessageLogs', 
+    const entityType = sequelize.define('Messages', 
     {
         id: { type: DataTypes.UUIDV1(), primaryKey: true },
-        groupId: { type: DataTypes.UUIDV1(64), allowNull: false },
-        userId: { type: DataTypes.UUIDV1(64), allowNull: false },
+        groupId: { type: DataTypes.UUIDV1(), allowNull: false },
+        userId: { type: DataTypes.UUIDV1(), allowNull: false },
         text: { type: DataTypes.STRING(255), allowNull: false },
         createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: Date.UTC },
     },
@@ -19,8 +19,15 @@ const init = (sequelize) => {
         // if you don't want that, set the following
         freezeTableName: true,
         // define the table's name
-        tableName: 'tb_messagelogs',
-        modelName: 'MessageLogs',
+        tableName: 'tb_messages',
+        modelName: 'Messages',
+        // define indexes
+        indexes: [
+            {
+                unique: false,
+                fields: ['groupId', 'createdAt']
+            }
+        ],
     })
 
     // entityType['associate'] = (models) => {

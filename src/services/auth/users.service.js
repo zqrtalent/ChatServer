@@ -27,7 +27,7 @@ const init = () => {
 
         const result = await dalService.createUser(user)
         return {
-            newUserId: result.data.id || '',
+            newUserId: result && result.data ? result.data.id || '' : '',
             success: result.success
         }
     }
