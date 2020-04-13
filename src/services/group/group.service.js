@@ -26,9 +26,19 @@ const init = () => {
         }
     }
 
+    const getGroupUsers = async (groupId, offset, pageSize) => {
+        const result = await dalService.getGroupUsers(groupId, offset, pageSize)
+        if(!result.success){
+            // log error here.
+            return null
+        }
+        return result.data
+    }
+    
     return {
         createGroup,
-        getUserGroups
+        getUserGroups,
+        getGroupUsers
     }
 }
 

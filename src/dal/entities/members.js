@@ -34,6 +34,7 @@ const init = (sequelize) => {
 
     entityType['associate'] = (models) => {
         entityType.Groups = entityType.belongsTo(models.Groups, { foreignKey: 'groupId' });
+        entityType.Users = entityType.belongsTo(models.Users, { foreignKey: 'userId' });
     }
 
     return entityType

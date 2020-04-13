@@ -85,9 +85,39 @@ const init = (opts) => {
         return result
     }
 
+    const getGroupUsers = async (groupId, offset, pageSize) => {
+        const result = {
+            success: false,
+            data: null
+        }
+
+        try{
+            const usersResult = await _database.Member.findAll({
+                include: { model: _database.User },
+                where: { groupId },
+                limit: Math.min(pageSize || 50, 50),
+                offset: offset || 0
+            })
+
+            result.success = true;
+            result.data = usersResult.map(val => {
+                const user = val.get('User')
+                return {
+                    id: user.id,
+                    email: user.email
+                }
+            })
+        }
+        catch(err){
+            result.errorDesc = err.toString()
+        }
+        return result
+    }
+
     return {
         createGroup,
-        getUserGroups
+        getUserGroups,
+        getGroupUsers
     }
 }
 

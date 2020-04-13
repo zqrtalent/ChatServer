@@ -1,9 +1,4 @@
-if(process.env.NODE_ENV !== 'production'){
-    require('dotenv').config({path: './dotenv/web'})
-}
-
 const express = require('express')
-const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
 
@@ -14,94 +9,39 @@ const {
     poolingroutes 
 } = require('./routes')
 
-const { 
-    passportjwt, 
-    poolingservice,
-    usersservice,
-    groupservice
-} = require('./services')
-const logger  = require('./common/logger')
+const init = (services) => {
+    const app = express()
 
-const { 
-    migrationtask, 
-    cachetask, 
-    messagequeuetask 
-} = require('./startup')
+    app.use(cors())
+    app.use(bodyParser.urlencoded({ extended: false }))
+    app.use(bodyParser.json())
+    app.use(services.passport.initialize())
 
-const { EventEmitter } = require('events')
-const emitter = new EventEmitter()
+    app.use('/hc', healthroutes(express, app))
+    app.use('/user', usersroutes(express, services.passport, services.usersService))
+    app.use('/group', grouproutes(express, services.passport, services.queueService, services.groupService, services.poolingservice))
+    app.use('/pooling', poolingroutes(express, services.passport, services.poolingservice))
 
-const startup = async () => {
-    const services = {
-        usersService: null,
-        groupService: null,
-        cacheClient: null,
-        queueService: null
-    }
+    app.use((req, res, next) => {
+        res.status(404).send();
+    });
 
-    // 1)
-    emitter.on('cache.start', () => {
-        logger.info(`->Starting cache service.`)
-        cachetask(emitter, logger)
-    })
-
-    // 2)
-    emitter.on('messagequeue.start', () => {
-        logger.info(`->Starting message queue service.`)
-        messagequeuetask(emitter, logger)
-    })
-
-    // Error
-    emitter.on('onerror', errorDesc => {
-        logger.error(errorDesc)
-    })
-
-    emitter.on('migration.done', () => {
-        logger.info(`->Database migration is up.`)
-        emitter.emit('cache.start')
-    })
-
-    emitter.on('cache.done', cacheClient => {
-        logger.info(`->Caching service is up.`)
-        services.cacheClient = cacheClient
-        emitter.emit('messagequeue.start')
-    })
-
-    emitter.on('messagequeue.done', queueService => {
-        logger.info(`->Message queue service is up.`)
-        services.queueService = queueService
-        emitter.emit('start')
-    })
-
-    emitter.on('start', () => {
-        const usersService = usersservice()
-        const groupService = groupservice()
-        const passport = passportjwt({}, usersService)
-
-        services.groupService = groupService
-        services.usersService = usersService
-
-        app.use(cors())
-        app.use(bodyParser.urlencoded({ extended: false }))
-        app.use(bodyParser.json())
-        app.use(passport.initialize())
-
-        app.use('/hc', healthroutes(express, services.queueService, services.cacheClient))
-        app.use('/user', usersroutes(express, passport, usersService))
-        app.use('/group', grouproutes(express, passport, services.queueService, groupService))
-        app.use('/pooling', poolingroutes(express, passport, poolingservice(services.cacheClient)))
-
-        app.use((err, req, res, next) => {
-            if (err.name === 'UnauthorizedError') {
-                res.status(401).send('Unauthorized');
+    app.use((err, req, res, next) => {
+        if (err.name === 'UnauthorizedError') {
+            res.status(401).send('Unauthorized')
+            return
+        }
+        else{
+            if(process.env.NODE_ENV != 'production'){
+                console.error(err.stack)
             }
-        });
-        
-        const port = process.env.NODE_PORT || 3000
-        app.listen(port, () => logger.info(`->Start listening on port ${port}`))
-    })
-
-    // Execute migration task.
-    await migrationtask(emitter, logger, {consoleLogging: false})
+            res.status(501).send('Internal error occured.')
+        }
+    });
+    
+    const port = process.env.NODE_PORT || 3000
+    app.listen(port, () => services.logger.info(`->Start listening on port ${port}`))
+    return app
 }
-startup()
+
+module.exports = init
