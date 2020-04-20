@@ -1,4 +1,3 @@
-const { db  } = require('../../config')
 const initdatabase = require('../entities')
 const uuid = require('uuid')
 
