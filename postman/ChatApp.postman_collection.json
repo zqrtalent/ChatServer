@@ -6,6 +6,268 @@
 	},
 	"item": [
 		{
+			"name": "user",
+			"item": [
+				{
+					"name": "Signin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ6YWtAZW1haWwuY29tIiwiaXNzIjoiY2hhdGFwcC5hdXRoLnNlcnZlciIsImF1ZCI6ImNoYXR1c2VycyJ9.ir0y3UNFhfuuhMPHd4s7uIPaMiNTBy71Nb1k0KOTqLY",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"zak@email.com\",\n\t\"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiurl}}/user/signin",
+							"host": [
+								"{{apiurl}}"
+							],
+							"path": [
+								"user",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"tam@email.com\",\n\t\"password\": \"password\",\n\t\"firstName\": \"tam\",\n\t\"lastName\": \"tam_last\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiurl}}/user/signup",
+							"host": [
+								"{{apiurl}}"
+							],
+							"path": [
+								"user",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "group",
+			"item": [
+				{
+					"name": "CreateGroup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhZWQzOWJlMC03NjdiLTExZWEtYTM1NS0wZDM1YTdmZjI4NzciLCJpYXQiOjE1ODYwMTE3NjcsImV4cCI6MTU4NjAxNTM2NywiYXVkIjoiY2hhdHVzZXJzIiwiaXNzIjoiY2hhdGFwcC5hdXRoLnNlcnZlciIsInN1YiI6Inpha0BlbWFpbC5jb20ifQ.uqXZtRPR5f8dFaVDJEsKg6h9cqV5RQQSuplwrw_Qhns",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Test Group1\",\n\t\"memberIds\": [\"19952b10-767c-11ea-ac11-d1f678009e2f\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiurl}}/group",
+							"host": [
+								"{{apiurl}}"
+							],
+							"path": [
+								"group"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SendGroupMessage",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhZWQzOWJlMC03NjdiLTExZWEtYTM1NS0wZDM1YTdmZjI4NzciLCJpYXQiOjE1ODYwMTE3NjcsImV4cCI6MTU4NjAxNTM2NywiYXVkIjoiY2hhdHVzZXJzIiwiaXNzIjoiY2hhdGFwcC5hdXRoLnNlcnZlciIsInN1YiI6Inpha0BlbWFpbC5jb20ifQ.uqXZtRPR5f8dFaVDJEsKg6h9cqV5RQQSuplwrw_Qhns",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"text\": \"hi hi hoi hoi\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiurl}}/group/{{testGroupId}}/send/text",
+							"host": [
+								"{{apiurl}}"
+							],
+							"path": [
+								"group",
+								"{{testGroupId}}",
+								"send",
+								"text"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetGroups",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhZWQzOWJlMC03NjdiLTExZWEtYTM1NS0wZDM1YTdmZjI4NzciLCJpYXQiOjE1ODYwMTE3NjcsImV4cCI6MTU4NjAxNTM2NywiYXVkIjoiY2hhdHVzZXJzIiwiaXNzIjoiY2hhdGFwcC5hdXRoLnNlcnZlciIsInN1YiI6Inpha0BlbWFpbC5jb20ifQ.uqXZtRPR5f8dFaVDJEsKg6h9cqV5RQQSuplwrw_Qhns"
+							}
+						],
+						"url": {
+							"raw": "{{apiurl}}/group",
+							"host": [
+								"{{apiurl}}"
+							],
+							"path": [
+								"group"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetGroupUsers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhZWQzOWJlMC03NjdiLTExZWEtYTM1NS0wZDM1YTdmZjI4NzciLCJpYXQiOjE1ODYwMTE3NjcsImV4cCI6MTU4NjAxNTM2NywiYXVkIjoiY2hhdHVzZXJzIiwiaXNzIjoiY2hhdGFwcC5hdXRoLnNlcnZlciIsInN1YiI6Inpha0BlbWFpbC5jb20ifQ.uqXZtRPR5f8dFaVDJEsKg6h9cqV5RQQSuplwrw_Qhns"
+							}
+						],
+						"url": {
+							"raw": "{{apiurl}}/group/{{testGroupId}}/users",
+							"host": [
+								"{{apiurl}}"
+							],
+							"path": [
+								"group",
+								"{{testGroupId}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "message",
+			"item": [
+				{
+					"name": "LongPoolingReceiveMessage",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5OWRkMzVkMC03MWZjLTExZWEtODNkYS02NTZlM2MxOTk4OWIiLCJpYXQiOjE1ODU1MTQzOTQsImV4cCI6MTU4NTUxNzk5NCwiYXVkIjoiY2hhdHVzZXJzIiwiaXNzIjoiY2hhdGFwcC5hdXRoLnNlcnZlciIsInN1YiI6InphazJAZW1haWwuY29tIn0.HQg1AR6CvpVKhQsDsVghDY3k03-u8fYm6Lfh3fNNFLk"
+							}
+						],
+						"url": {
+							"raw": "{{apiurl}}/pooling/message/receive",
+							"host": [
+								"{{apiurl}}"
+							],
+							"path": [
+								"pooling",
+								"message",
+								"receive"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "WebHealthCheck",
 			"request": {
 				"method": "GET",
@@ -17,190 +279,6 @@
 					],
 					"path": [
 						"hc"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "CreateGroup",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5OWRkMzVkMC03MWZjLTExZWEtODNkYS02NTZlM2MxOTk4OWIiLCJpYXQiOjE1ODU1ODk0NjAsImV4cCI6MTU4NTU5MzA2MCwiYXVkIjoiY2hhdHVzZXJzIiwiaXNzIjoiY2hhdGFwcC5hdXRoLnNlcnZlciIsInN1YiI6InphazJAZW1haWwuY29tIn0.crWuJ37S17dyGwRswJo6JpwjekQTXmgQLIBd4ur3YgA",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"name\": \"Test Group1\",\n\t\"memberIds\": [\"52fac1b0-72af-11ea-96ad-67a0bbcde254\", \"585d1540-72af-11ea-96ad-67a0bbcde254\", \"5e157810-72af-11ea-96ad-67a0bbcde254\"]\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{apiurl}}/group",
-					"host": [
-						"{{apiurl}}"
-					],
-					"path": [
-						"group"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "SendGroupMessage",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5OWRkMzVkMC03MWZjLTExZWEtODNkYS02NTZlM2MxOTk4OWIiLCJpYXQiOjE1ODU1ODk0NjAsImV4cCI6MTU4NTU5MzA2MCwiYXVkIjoiY2hhdHVzZXJzIiwiaXNzIjoiY2hhdGFwcC5hdXRoLnNlcnZlciIsInN1YiI6InphazJAZW1haWwuY29tIn0.crWuJ37S17dyGwRswJo6JpwjekQTXmgQLIBd4ur3YgA",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"text\": \"hi hi hoi hoi\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{apiurl}}/group/groupId/send/text",
-					"host": [
-						"{{apiurl}}"
-					],
-					"path": [
-						"group",
-						"groupId",
-						"send",
-						"text"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Signin",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ6YWtAZW1haWwuY29tIiwiaXNzIjoiY2hhdGFwcC5hdXRoLnNlcnZlciIsImF1ZCI6ImNoYXR1c2VycyJ9.ir0y3UNFhfuuhMPHd4s7uIPaMiNTBy71Nb1k0KOTqLY",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"email\": \"zak2@email.com\",\n\t\"password\": \"password\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{apiurl}}/user/signin",
-					"host": [
-						"{{apiurl}}"
-					],
-					"path": [
-						"user",
-						"signin"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Signup",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"email\": \"receiver3@email.com\",\n\t\"password\": \"password\",\n\t\"firstName\": \"receiver3\",\n\t\"lastName\": \"receiver3_last\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{apiurl}}/user/signup",
-					"host": [
-						"{{apiurl}}"
-					],
-					"path": [
-						"user",
-						"signup"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "ReceiveMessage",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"type": "text",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5OWRkMzVkMC03MWZjLTExZWEtODNkYS02NTZlM2MxOTk4OWIiLCJpYXQiOjE1ODU1MTQzOTQsImV4cCI6MTU4NTUxNzk5NCwiYXVkIjoiY2hhdHVzZXJzIiwiaXNzIjoiY2hhdGFwcC5hdXRoLnNlcnZlciIsInN1YiI6InphazJAZW1haWwuY29tIn0.HQg1AR6CvpVKhQsDsVghDY3k03-u8fYm6Lfh3fNNFLk"
-					}
-				],
-				"url": {
-					"raw": "{{apiurl}}/pooling/message/receive",
-					"host": [
-						"{{apiurl}}"
-					],
-					"path": [
-						"pooling",
-						"message",
-						"receive"
 					]
 				}
 			},
