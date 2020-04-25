@@ -19,8 +19,8 @@ const init = (services) => {
 
     app.use('/hc', healthroutes(express, app))
     app.use('/user', usersroutes(express, services.passport, services.usersService))
-    app.use('/group', grouproutes(express, services.passport, services.queueService, services.groupService, services.poolingservice))
-    app.use('/pooling', poolingroutes(express, services.passport, services.poolingservice))
+    app.use('/group', grouproutes(express, services.passport, services.queueService, services.groupService, services.poolingService))
+    app.use('/pooling', poolingroutes(express, services.passport, services.poolingService))
 
     app.use((req, res, next) => {
         res.status(404).send();

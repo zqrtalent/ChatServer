@@ -8,7 +8,7 @@ const init = (opts, userService) => {
         secretOrKey: jwtauth.secret,
         issuer: jwtauth.issuer,
         audience: jwtauth.audience,
-        ignoreExpiration: true
+        ignoreExpiration: false
     }, 
     async (payload, done) => {
         // User.findOne({id: jwt_payload.sub}, function(err, user) {

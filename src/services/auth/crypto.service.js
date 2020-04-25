@@ -2,19 +2,18 @@ const bcrypt = require('bcrypt')
 const saltRounds = 10
 
 const init = () => {
-
-    const generate = async (plainText) => {
+    const generateAsync = async (plainText) => {
         const salt = await bcrypt.genSalt(saltRounds)
         return await bcrypt.hash(plainText, salt)
     }
 
-    const compare = async (plainText, hash) => {
+    const compareAsync = async (plainText, hash) => {
         return await bcrypt.compare(plainText, hash)
     }
 
     return {
-        generate,
-        compare
+        generateAsync,
+        compareAsync
     }
 }
 

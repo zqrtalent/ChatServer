@@ -11,25 +11,25 @@ const init = (express, server) => {
         // resolves, if health, rejects if not
     }
 
-    createTerminus(server, {
-        signal: 'SIGINT',
-        healthChecks: { '/healthcheck': onHealthCheck },
-        onSignal
-    })
+    // createTerminus(server, {
+    //     signal: 'SIGINT',
+    //     healthChecks: { '/healthcheck': onHealthCheck },
+    //     onSignal
+    // })
     
 
     const router = express.Router()
-    // router.get('/ready', (req, res) => {
-    //     // Check messaging queue service connectivity.
-    //     // Check cache service connectivity.
-    //     res.status(200).send('OK')
-    // })
+    router.get('/ready', (req, res) => {
+        // Check messaging queue service connectivity.
+        // Check cache service connectivity.
+        res.status(200).send('OK')
+    })
 
-    // router.get('/live', (req, res) => {
-    //     // Check messaging queue service connectivity.
-    //     // Check cache service connectivity.
-    //     res.status(200).send('OK')
-    // })
+    router.get('/live', (req, res) => {
+        // Check messaging queue service connectivity.
+        // Check cache service connectivity.
+        res.status(200).send('OK')
+    })
     return router
 }
 

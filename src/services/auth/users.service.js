@@ -17,7 +17,7 @@ const init = () => {
     }
 
     const createUser = async (newUser) => {
-        const passwordHash = await cryptoService.generate(`${newUser.password}_${newUser.email}`)
+        const passwordHash = await cryptoService.generateAsync(`${newUser.password}_${newUser.email}`)
         const user = {
             passwordHash,
             firstName: newUser.firstName,
@@ -38,7 +38,7 @@ const init = () => {
             return null
         }
 
-        const compareResult = await cryptoService.compare(`${password}_${email}`, user.passwordHash)
+        const compareResult = await cryptoService.compareAsync(`${password}_${email}`, user.passwordHash)
         if(!compareResult){
             return null
         }

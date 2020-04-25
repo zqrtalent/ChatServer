@@ -7,3 +7,5 @@ CACHE_PORT=6379
 JWT_SECRETKEY=secretkey1
 JWT_ISSUER=chatapp.auth.server
 JWT_AUDIENCE=chatusers
+
+NODE_PORT = 3001

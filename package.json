@@ -1,17 +1,25 @@
 {
   "name": "chatapp",
   "version": "1.0.0",
-  "description": "",
+  "description": "Chat server application",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zqrtalent/ChatServer.git"
+  },
   "main": "index.js",
   "scripts": {
     "test": "jest",
     "start-web": "node ./src/web.js",
+    "start-web-inspect": "node --inspect=0.0.0.0 ./src/web.js",
     "start-web-dev": "nodemon ./src/web.js",
     "start-web-dev-debug": "node --inspect ./src/web.js",
+    "start-worker": "node ./src/worker.js",
+    "start-worker-inspect": "node --inspect=0.0.0.0 ./src/worker.js",
     "start-worker-dev": "nodemon ./src/worker.js",
     "start-worker-dev-debug": "nodemon --inspect ./src/worker.js",
     "start-docker": "docker-compose -f ./docker/docker-compose.yaml up -d --remove-orphans",
     "stop-docker": "docker-compose -f ./docker/docker-compose.yaml down",
+    "build-docker": "docker-compose -f ./docker/docker-compose.yaml build",
     "add-migration": "npx sequelize-cli migration:generate --name $1",
     "rollback-database": "npx sequelize-cli db:migrate:undo:all --to $1",
     "update-database": "npx sequelize-cli db:migrate"

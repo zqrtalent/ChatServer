@@ -13,11 +13,20 @@ const init = (express, passport, usersService) => {
             return
         }
 
-        const tokenResult = await usersService.verifyAndGenerateToken(email, password)
-        res.status(200).send({
-            success: tokenResult ? true : false,
-            token: tokenResult || ''
-        })
+        try{
+            const tokenResult = await usersService.verifyAndGenerateToken(email, password)
+            res.status(200).send({
+                success: tokenResult ? true : false,
+                token: tokenResult || ''
+            })
+        }
+        catch(err){
+            res.status(200).send({
+                success: false,
+                token: err.toSting()
+            })
+        }
+        
     })
     
     router.post('/signup', async (req, res) => {
