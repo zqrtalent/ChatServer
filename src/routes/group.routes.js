@@ -1,20 +1,31 @@
+const joi = require('@hapi/joi')
 const { messagefactory } = require('../processing/factories')
 const { queues } = require('../common/constants/queues.constants')
 
 const init = (express, passport, messageService, groupService) => {
     const router = express.Router()
-
     const auth = () => passport.authenticate('jwt', { session: false })
     
+    const createGroupRequestBody = joi.object({
+        name: joi.string().alphanum().min(2).required(),
+        memberIds: joi.array().min(1).required()
+    })
+
     /*Create group*/
     router.post('/', auth(), async (req, res) => {
         const userId = req.user.userId
-        const groupName = req.body.name || ''
-        const memberIds = req.body.memberIds
-        
-        const groupResult = await groupService.createGroup(userId, groupName, memberIds)
-        res.status(200).send(groupResult)
 
+        try{
+            const body = await createGroupRequestBody.validateAsync(req.body, { warnings: true })
+            const groupResult = await groupService.createGroup(userId, body.value.name, body.value.memberIds)
+            res.status(200).send(groupResult)
+        }
+        catch(err){
+            res.status(200).send({
+                success: false,
+                token: err.toString()
+            })
+        }
         // const command = messagefactory.createGroupCommand(userId, groupName, memberIds)
         // const sendResult = messagingService.sendMessage(queues.createGroup, command)
         // res.status(200).send({
@@ -47,50 +58,58 @@ const init = (express, passport, messageService, groupService) => {
         })
     })
 
+    const sendTextRequestBody = joi.object({
+        text: joi.string().alphanum().min(1).max(255).required(),
+    })
+
     /*Send group message*/
     router.post('/:groupId/send/text', auth(), async (req, res) => {
         const userId = req.user.userId
         const groupId = req.params.groupId
-        const text = req.body.text
+        
+        try{
+            const body = await sendTextRequestBody.validateAsync(req.body, { warnings: true })
+            const sendResult = await messageService.sendTextMessage(groupId, userId, body.value.text)
+            res.status(200).send({
+                success: sendResult
+            })
+        }
+        catch(err){
+            res.status(200).send({
+                success: false,
+                token: err.toString()
+            })
+        }
+    })
 
-        const sendResult = await messageService.sendTextMessage (groupId, userId, text)
-        res.status(200).send({
-            success: sendResult
-        })
-
-        // const groupUsers = await groupService.getGroupUsers(groupId, 0, 10)
-        // if(groupUsers == null || groupUsers.length == 0){
-        //     res.status(200).send({
-        //         errorDesc: 'No group members found!',
-        //         success: false
-        //     })
-        // }
-        // else{
-        //     const groupUserIds = groupUsers.map(x => { return x.id });
-        //     const sendResult = await poolingService.sendMessage(userId, groupId, groupUserIds, text)
-        //     res.status(200).send({
-        //         success: sendResult
-        //     })
-        // }
-
-        // const command = messagefactory.sendGroupMessageCommand(groupId, userId, text)
-        // const sendResult = messagingService.sendMessage(queues.sendMessage, command)
-        // res.status(200).send({
-        //     success: sendResult
-        // })
+    const getGroupMessagesParams = joi.object({
+        offset: joi.number().min(0),
+        pageSize: joi.number().min(0),
     })
 
     /*Get group message*/
     router.get('/:groupId/messages/offset/:offset/page/:pageSize', auth(), async (req, res) => {
         const userId = req.user.userId
         const groupId = req.params.groupId
-        const offset = parseInt(req.params.offset || '0')
-        const pageSize = parseInt(req.params.pageSize || '0')
 
-        const sendResult = await messageService.getMessagesByGroup (groupId, userId, offset, pageSize)
-        res.status(200).send({
-            success: sendResult
-        })
+        try{
+            const params = await getGroupMessagesParams.validateAsync({
+                offset: req.params.offset,
+                pageSize: req.params.pageSiz
+            }, { warnings: true })
+
+            const sendResult = await messageService.getMessagesByGroup (groupId, userId, 
+                params.value.offset, params.value.pageSize)
+            res.status(200).send({
+                success: sendResult
+            })
+        }
+        catch(err){
+            res.status(200).send({
+                success: false,
+                token: err.toString()
+            })
+        }
     })
     
     return router

@@ -1,20 +1,19 @@
 const { Router } = require('express')
+const joi = require('@hapi/joi')
 
 const init = (express, passport, usersService) => {
     const router = express.Router()
 
-    router.post('/signin', async (req, res) => {
-        const email = req.body.email || ''
-        const password = req.body.password || ''
-        
-        // TODO: use joi validator.
-        if(!email || !password){
-            res.status(404).send()
-            return
-        }
+    const signinRequestBody = joi.object({
+        email: joi.string().email({}).required(),
+        password: joi.string().min(4).max(32).required()
+    })
 
+    router.post('/signin', async (req, res) => {
         try{
-            const tokenResult = await usersService.verifyAndGenerateToken(email, password)
+            const body = await signinRequestBody.validateAsync(req.body, { warnings: true })
+
+            const tokenResult = await usersService.verifyAndGenerateToken(body.value.email, body.value.password)
             res.status(200).send({
                 success: tokenResult ? true : false,
                 token: tokenResult || ''
@@ -23,28 +22,35 @@ const init = (express, passport, usersService) => {
         catch(err){
             res.status(200).send({
                 success: false,
-                token: err.toSting()
+                token: err.toString()
             })
-        }
-        
+        }  
+    })
+
+    const signupRequestBody = joi.object({
+        email: joi.string().email({}).required(),
+        password: joi.string().min(4).max(32).required(),
+        firstName: joi.string().min(2).max(32).required(),
+        lastName: joi.string().min(2).max(32).required(),
     })
     
     router.post('/signup', async (req, res) => {
-        // TODO: use joi validator.
-        const newUser = {
-            email: req.body.email,
-            password: req.body.password,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName
+        try{
+            const body = await signupRequestBody.validateAsync(req.body, { warnings: true })
+            const result = await usersService.createUser(body.value)
+            res.status(200).send({
+                success: result.success,
+                data: {
+                    userId: result.newUserId
+                }
+            })
         }
-
-        const result = await usersService.createUser(newUser)
-        res.status(200).send({
-            success: result.success,
-            data: {
-                userId: result.newUserId
-            }
-        })
+        catch(err){
+            res.status(200).send({
+                success: false,
+                token: err.toString()
+            })
+        }        
     })
 
     return router
