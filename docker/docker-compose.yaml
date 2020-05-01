@@ -24,30 +24,30 @@ services:
         ports: 
             - "5672:5672"
             - "15672:15672"
-    webapi:
-        image: chatappweb:latest
-        build: 
-          context: ../
-          dockerfile: Dockerfile-web
-        ports: 
-          - "3000:80"
-          - "9229:9229"
-        environment: 
-          NODE_ENV: production
-          NODE_PORT: 80
-          DB_HOST: db
-          MSG_SERVICE_URL: amqp://messaging
-          MSG_QUEUES: web.messaging.queue
-          CACHE_HOST: cache
-          CACHE_PORT: 6379
-          JWT_SECRETKEY: secretkey1
-          JWT_ISSUER: chatapp.auth.server
-          JWT_AUDIENCE: chatusers
-        restart: always
-        depends_on: 
-          - db
-          - cache
-          - messaging
+    # webapi:
+    #     image: chatappweb:latest
+    #     build: 
+    #       context: ../
+    #       dockerfile: Dockerfile-web
+    #     ports: 
+    #       - "3000:80"
+    #       - "9229:9229"
+    #     environment: 
+    #       NODE_ENV: production
+    #       NODE_PORT: 80
+    #       DB_HOST: db
+    #       MSG_SERVICE_URL: amqp://messaging
+    #       MSG_QUEUES: web.messaging.queue
+    #       CACHE_HOST: cache
+    #       CACHE_PORT: 6379
+    #       JWT_SECRETKEY: secretkey1
+    #       JWT_ISSUER: chatapp.auth.server
+    #       JWT_AUDIENCE: chatusers
+    #     restart: always
+    #     depends_on: 
+    #       - db
+    #       - cache
+    #       - messaging
     # webserver:
     #     build: 
     #       context: ../

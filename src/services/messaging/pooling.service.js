@@ -14,7 +14,7 @@ const init = (caching) => {
         }
 
         let loop = 0
-        const items = [{ groupId, message: { type:'text', text }}]
+        const items = [{ groupId, message: { sender: senderId, type:'text', text }}]
         for(let userId of groupUserIds){
             await caching.pushListItems(`gmsg:-${userId}`, items)
             loop ++

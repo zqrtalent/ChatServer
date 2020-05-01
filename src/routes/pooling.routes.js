@@ -7,8 +7,7 @@ const init = (express, passport, poolingService) => {
     router.get('/message/receive', auth(), async (req, res) => {
         const userId = req.user.userId
         const received = await poolingService.receiveMessage(userId, 5)
-        console.log(received)
-
+        
         res.status(200).send({
             success: true,
             data: received

@@ -8,7 +8,8 @@ const {
     passportjwt, 
     poolingservice,
     usersservice,
-    groupservice
+    groupservice,
+    messageservice
 } = require('./services')
 const logger  = require('./common/logger')
 
@@ -29,6 +30,7 @@ const startup = async () => {
         queueService: null,
         passport: null,
         poolingService: null,
+        messageService: null,
         logger
     }
 
@@ -71,6 +73,7 @@ const startup = async () => {
         services.usersService = usersservice()
         services.passport = passportjwt({}, services.usersService)
         services.poolingService = poolingservice(services.cacheClient)
+        services.messageService = messageservice(services.poolingService, services.groupService)
 
         const app = createServer(services)
     })

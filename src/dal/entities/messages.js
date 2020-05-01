@@ -28,11 +28,21 @@ const init = (sequelize) => {
                 fields: ['groupId', 'createdAt']
             }
         ],
+        // Hooks
+        hooks: {
+            afterCreate: (message, options) => {
+                
+            },
+            afterBulkCreate: (messages, options) => {
+
+            },
+        },
     })
 
-    // entityType['associate'] = (models) => {
-    //     entityType.belongsToMany(models.Conversations, { through: 'ConversationParticipants', foreignKey: 'participantId' });
-    // }
+    entityType['associate'] = (models) => {
+        entityType.Users = entityType.belongsTo(models.Users, { foreignKey: 'userId' });
+        entityType.Groups = entityType.belongsTo(models.Groups, { foreignKey: 'groupId' });
+    }
 
     return entityType
 }

@@ -3,15 +3,6 @@ const { groupdalservice } = require('../../dal')
 const init = () => {
     const dalService = groupdalservice({}) 
 
-    const getUserGroups = async (userId, offset, pageSize) => {
-        const result = await dalService.getUserGroups(userId, offset, pageSize)
-        if(!result.success){
-            // log error here.
-            return null
-        }
-        return result.data
-    }
-
     const createGroup = async (userId, name, memberIds) => {
         const group = {
             name: name,
@@ -24,6 +15,15 @@ const init = () => {
             newGroupId: result && result.data ? result.data.id || '' : '',
             success: result.success
         }
+    }
+
+    const getUserGroups = async (userId, offset, pageSize) => {
+        const result = await dalService.getUserGroups(userId, offset, pageSize)
+        if(!result.success){
+            // log error here.
+            return null
+        }
+        return result.data
     }
 
     const getGroupUsers = async (groupId, offset, pageSize) => {

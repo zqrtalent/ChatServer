@@ -9,7 +9,6 @@ const execute = (emitter, logger) => {
             return {
                 queueName: x,
                 onMessageCallback: (queue, msg, oncomplete) => {
-                    console.log(queue)
                     oncomplete(msg)
                 },
                 noAck: false,
