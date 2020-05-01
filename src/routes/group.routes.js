@@ -48,9 +48,7 @@ const init = (express, passport, messageService, groupService) => {
     router.get('/:groupId/users', auth(), async (req, res) => {
         const userId = req.user.userId
         const groupId = req.params.groupId
-
-        // TODO: check if current user has access to the group.
-        var users = await groupService.getGroupUsers(groupId, 0, 20)
+        var users = await groupService.getGroupUsers(userId, groupId, 0, 20)
 
         res.status(200).send({
             data: users,
