@@ -17,7 +17,7 @@ const createGroupCommand = (creatorId, name, memberIds) => {
     }
 }
 
-const sendMessageCommand = (groupId, senderId, text) => {
+const sendGroupTextMessageCommand = (groupId, senderId, text) => {
     return {
         type: messageTypes.sendGroupMessage,
         payload: {
@@ -35,5 +35,5 @@ const sendMessageCommand = (groupId, senderId, text) => {
 
 module.exports = {
     createGroupCommand,
-    sendGroupMessageCommand: sendMessageCommand
+    sendGroupTextMessageCommand
 }

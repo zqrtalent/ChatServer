@@ -16,7 +16,7 @@ const init = () => {
                 algorithm: jwtauth.alg,
                 audience: jwtauth.audience,
                 issuer: jwtauth.issuer,
-                expiresIn: 3600
+                expiresIn: 86400
             })
     }
 

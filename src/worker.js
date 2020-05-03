@@ -6,7 +6,13 @@ const express = require('express')
 const app = express()
 const { healthroutes } = require('./routes')
 const { cachingconfig, messagequeueconfig } = require('./config')
-const { messagingservice, cacheservice, poolingservice } = require('./services')
+const { 
+    messagingservice, 
+    cacheservice, 
+    poolingservice, 
+    groupservice,
+    messageservice
+} = require('./services')
 const processingManager = require('./processing/processing.manager')()
 const logger  = require('./common/logger')
 
@@ -14,7 +20,9 @@ const services = {
     usersService: null,
     cacheClient: null,
     queueService: null,
-    poolingService: null
+    poolingService: null,
+    groupService: null,
+    messageService: null
 }
 
 /* Initialize cache client. */
@@ -33,7 +41,7 @@ const queues = messagequeueconfig.queues.map(x =>  {
             await processingManager.handleMessage(message, () => oncomplete(msg), services)
         },
         noAck: false,
-        persistMessages: true,
+        persistMessages: true
     }
 })
 
@@ -45,10 +53,12 @@ const opts = {
 messagingservice(opts).then((queueService) => {
     services.queueService = queueService
     services.poolingService = poolingservice(services.cacheClient)
+    services.groupService = groupservice({})
+    services.messageService = messageservice(services.poolingService, services.groupService)
 
     app.use('/', healthroutes(express, queueService, cacheClient))
 
-    const port = process.env.NODE_PORT || 3001
+    const port = process.env.NODE_PORT || 3002
     app.listen(port, () => console.log(`Start listening on port ${port}`))
 },
 (error) => {

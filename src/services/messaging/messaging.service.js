@@ -1,6 +1,15 @@
 const logger = require('../../common/logger')
 const amqp = require('amqplib/callback_api')
 
+/*
+
+Features to be added:
+    - Reconnect 
+    - Dead letter queue.
+    - Hearbeat check method.
+    - Graceful close of the connection.
+*/
+
 let amqpChannel = null // Channel
 
 /**
@@ -8,10 +17,30 @@ let amqpChannel = null // Channel
  * @param {*} opts Initialize connection options.
  * @param {*} channel RabbitMQ channel instance object.
  */
-const setupQueues = (opts, channel) => {
+const setupQueues = (opts, channel, onAssertQueueCallback) => {
     const queues = opts.queues || [];
-    queues.forEach(q => {
-        channel.assertQueue(q.queueName, { durable: q.persistMessages || false });
+    queues.forEach(qOpts => {
+        // Assert Dead-Letter-Exchange.
+        const dlx = 'dead-letter-ex'
+        channel.assertExchange(dlx, 'direct', { durable: true })
+
+        // Assert Queue
+        channel.assertQueue(qOpts.queueName, { 
+            exclusive: false, 
+            deadLetterExchange: dlx, 
+            //messageTtl (0 <= n < 2^32): expires messages arriving in the queue after n
+            durable: qOpts.persistMessages || false 
+        }, (err, q) => {
+            if(err){
+                logger.error(`assertQueue() error: ${err.toString()}`)
+            }
+            else{
+                // Bind queue to the exchange.
+                channel.bindQueue(q.queue, dlx)
+                // Invoke callback
+                onAssertQueueCallback(channel, q, qOpts)
+            }
+        })
     });
 }
 
@@ -31,7 +60,7 @@ const sendMessage = (queue, message) => {
         return false
     }
     
-    amqpChannel.sendToQueue(queue, Buffer.from(JSON.stringify(message)), { persistent: true })
+    amqpChannel.publish(/*exchange*/'', queue, Buffer.from(JSON.stringify(message)), { persistent: true })
     return true;
 }
 
@@ -77,31 +106,55 @@ const init = (opts) => {
                     reject(error) // Reject with error
                     return
                 }
-                
-                // Setup queues.
-                setupQueues(opts, channel)
 
+                // One message to a worker at a time.
+                //channel.prefetch(1)
+                
                 // Channel has created.
                 amqpChannel = channel
 
-                // Register consume message functionality.
-                const queues = opts.queues || []
-                queues.forEach(q => {
-                    if(typeof (q.onMessageCallback || '') != 'function'){
+                // Setup queues.
+                setupQueues(opts, channel, (ch, q, qOpts) => {
+                    if(typeof (qOpts.onMessageCallback || '') != 'function'){
                         return
                     }
-                    channel.consume(q.queueName, 
-                        (msg) => {
-                            q.onMessageCallback(
-                                q.queueName, 
-                                msg, 
+
+                    channel.consume(qOpts.queueName, async (msg) => {
+                        try{
+                            await qOpts.onMessageCallback(qOpts.queueName, msg, 
                                 (message) => {
                                     // Send ACK message back.
-                                    if((q.noAck || true) === false){
+                                    if(qOpts.noAck === false){
                                         amqpChannel.ack(message)
                                     }
-                                } )
-                        }, { noAck: q.noAck || true });
+                                })
+                        }
+                        catch(err){
+                            amqpChannel.nack(msg, false, false)
+
+                            // let retryCt = msg.properties.headers['x-retry-ct']
+                            // if(typeof retryCt == 'undefined'){
+                            //     retryCt = 2 // Max retry count.
+                            // }
+
+                            // // Move to DLQ
+                            // if(retryCt <= 0){
+                            //     amqpChannel.nack(msg, false, false)
+                            // }
+                            // else{
+                            //     // Send ack
+                            //     amqpChannel.ack(msg)
+
+                            //     // Requeue message with retry flag.
+                            //     amqpChannel.publish('', msg.fields.routingKey, msg.content, { 
+                            //         persistent: true,
+                            //         headers:{
+                            //             'x-retry-ct': retryCt - 1
+                            //         }
+                            //     })
+                            // }
+                        }
+                    }, { noAck: qOpts.noAck });
                 })
 
                 resolve({

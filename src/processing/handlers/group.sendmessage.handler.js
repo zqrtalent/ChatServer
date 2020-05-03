@@ -2,31 +2,9 @@ const logger = require('../../common/logger')
 
 const handler = async (data, completed, services) => {
     logger.info(`processing group.sendmessage message with data ${JSON.stringify(data)}`)
-
-    /*
-    {
-        type: messageTypes.sendGroupMessage,
-        payload: {
-            groupId: groupId,
-            sender: {
-                id: senderId
-            },
-            message:{
-                type: 'text',
-                text: text
-            }
-        }
-    }
-    */
-
-    const groupId = data.payload.groupId
-    const senderId = data.payload.sender.id
-    const text = data.payload.message.text
-    const groupUserIds = [senderId]
-
-    const poolingService = services.poolingService
-    const sendResult = await poolingService.sendMessage(senderId, groupId, groupUserIds, text)
-    logger.info(`${data.type.toString()}: result is ${sendResult}`)
+    const payload = data.payload
+    const sendResult = await services.messageService1.sendTextMessage(payload.groupId, payload.sender.id, payload.message.text)
+    logger.info(`${data.type.toString()}: result is ${JSON.stringify(sendResult)}`)
 
     // Processing has been completed.
     completed();

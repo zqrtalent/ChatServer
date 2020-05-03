@@ -2,12 +2,12 @@ const joi = require('@hapi/joi')
 const { messagefactory } = require('../processing/factories')
 const { queues } = require('../common/constants/queues.constants')
 
-const init = (express, passport, messageService, groupService) => {
+const init = (express, passport, messageService, groupService, queueService) => {
     const router = express.Router()
     const auth = () => passport.authenticate('jwt', { session: false })
     
     const createGroupRequestBody = joi.object({
-        name: joi.string().alphanum().min(2).required(),
+        name: joi.string().min(2).required(),
         memberIds: joi.array().min(1).required()
     })
 
@@ -17,8 +17,14 @@ const init = (express, passport, messageService, groupService) => {
 
         try{
             const body = await createGroupRequestBody.validateAsync(req.body, { warnings: true })
-            const groupResult = await groupService.createGroup(userId, body.value.name, body.value.memberIds)
-            res.status(200).send(groupResult)
+            const command = messagefactory.createGroupCommand(userId, body.value.name, body.value.memberIds)
+            const sendResult = queueService.sendMessage(queues.createGroup, command)
+            res.status(200).send({
+                success: sendResult
+            })
+
+            // const groupResult = await groupService.createGroup(userId, body.value.name, body.value.memberIds)
+            // res.status(200).send(groupResult)
         }
         catch(err){
             res.status(200).send({
@@ -26,11 +32,6 @@ const init = (express, passport, messageService, groupService) => {
                 token: err.toString()
             })
         }
-        // const command = messagefactory.createGroupCommand(userId, groupName, memberIds)
-        // const sendResult = messagingService.sendMessage(queues.createGroup, command)
-        // res.status(200).send({
-        //     success: sendResult
-        // })
     })
 
     /*Get groups*/
@@ -57,7 +58,7 @@ const init = (express, passport, messageService, groupService) => {
     })
 
     const sendTextRequestBody = joi.object({
-        text: joi.string().alphanum().min(1).max(255).required(),
+        text: joi.string().min(1).max(255).required(),
     })
 
     /*Send group message*/
@@ -67,10 +68,16 @@ const init = (express, passport, messageService, groupService) => {
         
         try{
             const body = await sendTextRequestBody.validateAsync(req.body, { warnings: true })
-            const sendResult = await messageService.sendTextMessage(groupId, userId, body.value.text)
+            const command = messagefactory.sendGroupTextMessageCommand(groupId, userId, body.value.text)
+            const sendResult = queueService.sendMessage(queues.sendMessage, command)
             res.status(200).send({
                 success: sendResult
             })
+            
+            // const sendResult = await messageService.sendTextMessage(groupId, userId, body.value.text)
+            // res.status(200).send({
+            //     success: sendResult
+            // })
         }
         catch(err){
             res.status(200).send({
