@@ -68,9 +68,7 @@ const init = (express, passport, messageService, groupService) => {
         try{
             const body = await sendTextRequestBody.validateAsync(req.body, { warnings: true })
             const sendResult = await messageService.sendTextMessage(groupId, userId, body.value.text)
-            res.status(200).send({
-                success: sendResult
-            })
+            res.status(200).send(sendResult)
         }
         catch(err){
             res.status(200).send({
@@ -105,7 +103,7 @@ const init = (express, passport, messageService, groupService) => {
         catch(err){
             res.status(200).send({
                 success: false,
-                token: err.toString()
+                errorDetails: err.toString()
             })
         }
     })
