@@ -57,7 +57,7 @@ const init = (express, passport, messageService, groupService) => {
     })
 
     const sendTextRequestBody = joi.object({
-        text: joi.string().alphanum().min(1).max(255).required(),
+        text: joi.string().min(1).max(255).required(),
     })
 
     /*Send group message*/

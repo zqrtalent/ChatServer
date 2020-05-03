@@ -26,7 +26,7 @@ const init = () => {
         return result.data
     }
 
-    const getGroupUsers = async (userId, groupId, offset, pageSize) => {
+    const getGroupUsers = async (groupId, offset, pageSize) => {
         // TODO: check if current user has access to the group.
         
         const result = await dalService.getGroupUsers(groupId, offset, pageSize)
