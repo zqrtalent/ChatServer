@@ -1,2 +1,5 @@
 node_modules/
+
 docker/mysql-data
+
+docker/seq-data

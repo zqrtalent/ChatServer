@@ -18,12 +18,22 @@ services:
     cache:
         image: redis:latest
         ports: 
-            - "6379:6379"
+          - "6379:6379"
     messaging:
         image: "rabbitmq:3-management"
         ports: 
-            - "5672:5672"
-            - "15672:15672"
+          - "5672:5672"
+          - "15672:15672"
+    seq_logging:
+        image: "datalust/seq:latest"
+        volumes: 
+          - "./seq-data:/data"
+        restart: "unless-stopped"
+        ports: 
+          - "8089:80"
+          - "5341:5341"
+        environment: 
+          ACCEPT_EULA: Y
     # webapi:
     #     image: chatappweb:latest
     #     build: 
