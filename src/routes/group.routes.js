@@ -94,11 +94,9 @@ const init = (express, passport, messageService, groupService) => {
                 pageSize: req.params.pageSiz
             }, { warnings: true })
 
-            const sendResult = await messageService.getMessagesByGroup (groupId, userId, 
+            const sendResult = await messageService.getMessagesByGroup(groupId, userId, 
                 params.value.offset, params.value.pageSize)
-            res.status(200).send({
-                success: sendResult
-            })
+            res.status(200).send(sendResult)
         }
         catch(err){
             res.status(200).send({
