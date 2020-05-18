@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+    name: chatwebapi
+    labels:
+        app: chatwebapi
+spec:
+    replicas: 3
+    selector:
+        matchLabels:
+            app: chatwebapi
+    template:
+        metadata:
+            labels:
+                app: chatwebapi
+        spec:
+        containers:
+            -   name: chatwebapi
+                image: zqrtalent.io/chatwebapi:1.0.0
+                env:
+                -   name: MSG_SERVICE_URL
+                    valueFrom:
+                        configMapKeyRef:
+                            name: webapi-config
+                            key: MSG_SERVICE_URL
+                -   name: MSG_QUEUES
+                    valueFrom:
+                        configMapKeyRef:
+                            name: webapi-config
+                            key: MSG_QUEUES
+                -   name: CACHE_HOST
+                        valueFrom:
+                            configMapKeyRef:
+                                name: webapi-config
+                                key: CACHE_HOST
+                -   name: CACHE_PORT
+                    valueFrom:
+                        configMapKeyRef:
+                            name: webapi-config
+                            key: CACHE_PORT
+                -   name: JWT_ISSUER
+                    valueFrom:
+                        configMapKeyRef:
+                            name: webapi-config
+                            key: JWT_ISSUER
+                -   name: JWT_AUDIENCE
+                    valueFrom:
+                        configMapKeyRef:
+                            name: webapi-config
+                            key: JWT_AUDIENCE
+                -   name: DB_USERNAME
+                    valueFrom:
+                        configMapKeyRef:
+                            name: webapi-config
+                            key: DB_USERNAME
+                -   name: DB_DATABASE
+                    valueFrom:
+                        configMapKeyRef:
+                            name: webapi-config
+                            key: DB_DATABASE
+                -   name: DB_HOST
+                    valueFrom:
+                        configMapKeyRef:
+                            name: webapi-config
+                            key: DB_HOST
+                -   name: DB_DIALECT
+                    valueFrom:
+                        configMapKeyRef:
+                            name: webapi-config
+                            key: DB_DIALECT
+                -   name: DB_STORAGE
+                    valueFrom:
+                        configMapKeyRef:
+                            name: webapi-config
+                            key: DB_STORAGE
+                -   name: DB_MINPOOLSIZE
+                    valueFrom:
+                        configMapKeyRef:
+                            name: webapi-config
+                            key: DB_MINPOOLSIZE
+                -   name: DB_MAXPOOLSIZE
+                    valueFrom:
+                        configMapKeyRef:
+                            name: webapi-config
+                            key: DB_MAXPOOLSIZE
+                - name: JWT_SECRETKEY
+                    valueFrom:
+                        secretKeyRef:
+                            name: webapi-secret
+                            key: JWT_SECRETKEY
+                - name: DB_PASSWORD
+                    valueFrom:
+                        secretKeyRef:
+                            name: webapi-secret
+                            key: DB_PASSWORD

@@ -20,20 +20,20 @@ const seqLoggingService = (opts) => {
 // log.info('Hi!');
 // log.warn({lang: 'fr'}, 'Au revoir');
 
-    const error = (...args) => {
-        _log.error(args[0])
+    const error = (format, ...args) => {
+        _log.error(format, args)
     }
 
-    const warning = (...args) => {
-        _log.warn(args[0])
+    const warning = (format, ...args) => {
+        _log.warn(format, args)
     }
 
-    const info = (...args) => {
-        _log.info(args[0])
+    const info = (format, ...args) => {
+        _log.info(format, args)
     }
 
-    const debug = (...args) => {
-        _log.debug(args[0])
+    const debug = (format, ...args) => {
+        _log.debug(format, args)
     }
     
     return {

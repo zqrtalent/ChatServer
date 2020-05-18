@@ -70,9 +70,7 @@ const init = (express, passport, messageService, groupService, queueService) => 
             const body = await sendTextRequestBody.validateAsync(req.body, { warnings: true })
             const command = messagefactory.sendGroupTextMessageCommand(groupId, userId, body.value.text)
             const sendResult = queueService.sendMessage(queues.sendMessage, command)
-            res.status(200).send({
-                success: sendResult
-            })
+            res.status(200).send(sendResult)
             
             // const sendResult = await messageService.sendTextMessage(groupId, userId, body.value.text)
             // res.status(200).send({
